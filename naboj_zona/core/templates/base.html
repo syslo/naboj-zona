@@ -1,0 +1,41 @@
+{% load bootstrap3 %}
+{% load static %}
+
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>{% block title %}{{ site.title }}{% endblock %}</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+
+  {% block css %}
+    {% bootstrap_css %}
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+  {% endblock %}
+</head>
+
+<body>
+
+  {% include "parts/navigation.html" %}
+
+  <main class="container">
+    <head>
+      <div class="page-header">
+        {% block page_header %}
+        {% endblock %}
+      </div>
+    </head>
+    <div>
+      {% block page_content %}
+      {% endblock %}
+    </div>
+  </main>
+
+  {% block javascript %}
+    {% bootstrap_javascript jquery=1 %}
+  {% endblock %}
+</body>
+</html>
