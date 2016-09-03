@@ -1,0 +1,20 @@
+# This is setup document of Náboj Zóna:
+#   - contains setup instructions as well as commands to execute
+#   - applicable to both, installation and update
+#   - at your own responsibility, it is possible to run this document 
+
+# 1. Make sure you are inside virtualenv
+if [ -z $VIRTUAL_ENV ]
+    then echo "Not in Python virtualenv!"
+    exit
+fi
+
+# 2. Install all the requirements
+pip install -r requirements.txt
+
+# 3. Update `.env` file accordingly to the `.env.dist`
+touch .env
+vim -d .env .env.dist
+
+# 4. Update the database
+python manage.py migrate

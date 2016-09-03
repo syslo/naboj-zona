@@ -3,3 +3,6 @@ __pycache__
 
 # Data
 /db.sqlite3
+
+# Config
+/.env
