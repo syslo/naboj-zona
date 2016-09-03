@@ -6,3 +6,4 @@ __pycache__
 
 # Config
 /.env
+/naboj_zona/settings/local.py

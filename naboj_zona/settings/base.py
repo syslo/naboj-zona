@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'bootstrap3',
 
+    'naboj_zona.struct_wiki',
     'naboj_zona.core',
 ]
 
