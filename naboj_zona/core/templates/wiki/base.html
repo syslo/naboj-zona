@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block js %}
+  {{ block.super }}
+  <script src="{% static 'wiki/js/core.js' %}"></script>
+{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static 'wiki/bootstrap/css/wiki-bootstrap.css' %}"></link>
+  {{ block.super }}
+{% endblock %}
+
+{% block page %}
+  {% with parentblock=block %}
+    {% block wiki_content %}
+      {{ parentblock.super }}
+    {% endblock %}
+  {% endwith %}
+{% endblock %}
+
+{% block body %}
+  {% with parentblock=block %}
+    {% block wiki_body %}
+      {{ parentblock.super }}
+    {% endblock %}
+  {% endwith %}
+{% endblock %}

@@ -1,3 +1,18 @@
-body {
+.with-navigation {
   padding-top: 50px;
+}
+
+.page-header h1 {
+  margin-bottom: 0px;
+}
+
+.wiki-article-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.wiki-article-header h1 {
+  margin-top: 0px;
 }

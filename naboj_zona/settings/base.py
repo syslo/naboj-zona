@@ -34,17 +34,25 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.humanize',
     'django.contrib.sessions',
+    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'bootstrap3',
-
-    'naboj_zona.struct_wiki',
     'naboj_zona.core',
+    'naboj_zona.struct_wiki',
+
+    'mptt',
+    'sekizai',
+
+    'wiki',
+    'wiki.plugins.attachments',
+
+    'bootstrap3',
 ]
 
-MIDDLEWARE = [
+MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -52,7 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
+)
 
 ROOT_URLCONF = 'naboj_zona.urls'
 
@@ -67,6 +75,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                'sekizai.context_processors.sekizai',
+
                 'naboj_zona.core.context_processors.site',
                 'naboj_zona.core.context_processors.navigation',
             ],
@@ -126,6 +137,14 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# Bootstrap
+
 BOOTSTRAP3 = {
     'theme_url': 'https://bootswatch.com/united/bootstrap.min.css'
 }
+
+# Django Wiki
+
+SITE_ID = 1
+WIKI_ACCOUNT_HANDLING = False
+WIKI_URL_CONFIG_CLASS = 'naboj_zona.struct_wiki.urls.StructWikiURLPatterns'

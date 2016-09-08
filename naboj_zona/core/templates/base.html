@@ -1,5 +1,6 @@
 {% load bootstrap3 %}
 {% load static %}
+{% load sekizai_tags %}
 
 <!doctype html>
 
@@ -15,27 +16,33 @@
     {% bootstrap_css %}
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
   {% endblock %}
+  {# Ugly sekizai_tags needed in root document #}
+  {% render_block "css" %}
 </head>
 
 <body>
+  {% block body %}
+    {% include "parts/navigation.html" %}
 
-  {% include "parts/navigation.html" %}
-
-  <main class="container">
-    <head>
-      <div class="page-header">
-        {% block page_header %}
-        {% endblock %}
-      </div>
-    </head>
-    <div>
-      {% block page_content %}
+    <main class="container with-navigation">
+      {% block page %}
+        <head>
+          <div class="page-header">
+            {% block page_header %}
+            {% endblock %}
+          </div>
+        </head>
+        <div>
+          {% block page_content %}
+          {% endblock %}
+        </div>
       {% endblock %}
-    </div>
-  </main>
-
-  {% block javascript %}
+    </main>
+  {% endblock %}
+  {% block js %}
     {% bootstrap_javascript jquery=1 %}
   {% endblock %}
+  {# Ugly sekizai_tags needed in root document #}
+  {% render_block "js" %}
 </body>
 </html>

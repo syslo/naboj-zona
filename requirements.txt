@@ -1,3 +1,12 @@
 Django==1.10
 django-bootstrap3==7.0.1
+django-classy-tags==0.8.0
 django-dotenv==1.4.1
+django-mptt==0.8.6
+django-nyt==0.9.9
+django-sekizai==0.10.0
+Markdown==2.6.6
+Pillow==3.3.1
+six==1.10.0
+sorl-thumbnail==12.3
+wiki==0.1.2
