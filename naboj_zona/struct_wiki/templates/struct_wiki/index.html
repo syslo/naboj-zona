@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block page_header %}
+<h1>Articles</h1>
+{% endblock %}
+
+{% block page_content %}
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Domain</th>
+        <th>Last Modified</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for holder in holders %}
+        <tr
+          onclick="location.href='{% url 'wiki:get' article_id=holder.article.pk %}'"
+        >
+          <td>{{ holder.article.current_revision.title }}</td>
+          <td>{{ holder.domain.name }}</td>
+          <td>{{ holder.article.current_revision.modified }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
+

@@ -20,6 +20,7 @@ class StructWikiURLPatterns(WikiURLPatterns):
 
     def get_root_urls(self):
         urlpatterns = [
+            url('^$', views.index, name='index'),
             url('^_revision/diff/(?P<revision_id>\d+)/$',
                 self.article_diff_view,
                 name='diff'),

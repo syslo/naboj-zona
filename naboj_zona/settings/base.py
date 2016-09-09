@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 from os import path
 
+from naboj_zona.struct_wiki import permissions as wiki_permissions
+
+
 # Build paths inside the project like this: path.join(BASE_DIR, ...)
 BASE_DIR = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
 
@@ -148,3 +151,7 @@ BOOTSTRAP3 = {
 SITE_ID = 1
 WIKI_ACCOUNT_HANDLING = False
 WIKI_URL_CONFIG_CLASS = 'naboj_zona.struct_wiki.urls.StructWikiURLPatterns'
+WIKI_CAN_READ = wiki_permissions.can_read
+WIKI_CAN_WRITE = wiki_permissions.can_write
+WIKI_CAN_DELETE = wiki_permissions.can_delete
+WIKI_CAN_MODERATE = wiki_permissions.can_moderate

@@ -1,17 +1,29 @@
 from django.db import models
 from django.conf import settings
 
+from wiki.models.article import Article
+
 from .config import MAX_DOMAIN_DEPTH, MEMBERSHIP_CHOICES
+from .constants import RECURSIVE_PERMISSIONS, PUBLISHABLE_PERMISSIONS
 from .helpers import types_for_permission
 
 
 class DomainQuerySet(models.QuerySet):
 
     def with_user_permission(self, user, permission):
-        return self.filter(
-            memberships__user=user,
-            memberships__type__in=types_for_permission(permission)
-        )
+        if user.is_anonymous():
+            qs = self.none()
+        else:
+            qs = self.filter(
+                memberships__user=user,
+                memberships__type__in=types_for_permission(permission)
+            )
+
+        if permission in PUBLISHABLE_PERMISSIONS:
+            qs = qs.filter(public=False)
+            qs |= self.filter(public=True)
+
+        return qs
 
     def prefetch_ancestors(self, depth=MAX_DOMAIN_DEPTH):
         fields = []
@@ -24,11 +36,11 @@ class DomainQuerySet(models.QuerySet):
     def ancestor_set(self, depth=MAX_DOMAIN_DEPTH):
         result = set()
         for domain in self.distinct().prefetch_ancestors(depth):
-            for i in range(depth+1):
+            for i in range(depth):
                 if not domain:
                     break
-                result.add(domain)
                 domain = domain.parent
+                result.add(domain)
         return result
 
     def descendants(self, depth=MAX_DOMAIN_DEPTH):
@@ -49,6 +61,7 @@ class Domain(models.Model):
     parent = models.ForeignKey(
         'self', null=True, blank=True, related_name='children'
     )
+    public = models.BooleanField()
 
     objects = DomainQuerySet.as_manager()
 
@@ -69,3 +82,36 @@ class Membership(models.Model):
 
     class Meta:
         unique_together = (("user", "domain"),)
+
+
+class ArticleHolderQuerySet(models.QuerySet):
+
+    def with_user_permission(self, user, permission):
+        domains = Domain.objects.with_user_permission(user, permission)
+        qs = self.filter(domain__in=domains.descendants())
+        if permission in RECURSIVE_PERMISSIONS:
+            qs |= self.filter(
+                recursive=True,
+                domain__in=domains.ancestor_set()
+            )
+        return qs
+
+
+class ArticleHolder(models.Model):
+    article = models.OneToOneField(
+        Article, on_delete=models.CASCADE,
+        primary_key=True, related_name='holder',
+    )
+    domain = models.ForeignKey(
+        Domain, related_name='article_holders'
+    )
+    recursive = models.BooleanField()
+
+    objects = ArticleHolderQuerySet.as_manager()
+
+    def has_user_permission(self, user, permission):
+        my_qs = ArticleHolder.objects.filter(pk=self.pk)
+        return bool(my_qs.with_user_permission(user, permission).count())
+
+    def __str__(self):
+        return str(self.article)
