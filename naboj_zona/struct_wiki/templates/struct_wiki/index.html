@@ -30,8 +30,13 @@
               <span class="label label-primary">{{ tag.name }}</span>
             {% endfor %}
           </td>
-          <td>{{ holder.domain.name }}</td>
-          <td>{{ holder.article.current_revision.modified }}</td>
+          <td>
+            {{ holder.domain.name }}
+            {% if holder.recursive %}
+              &nbsp;<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            {% endif %}
+          </td>
+          <td>{{ holder.article.current_revision.modified|date:"Y-m-d H:i" }}</td>
         </tr>
       {% endfor %}
     </tbody>

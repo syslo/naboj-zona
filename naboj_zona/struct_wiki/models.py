@@ -113,7 +113,7 @@ class ArticleHolder(models.Model):
         Domain, related_name='article_holders'
     )
     tags = models.ManyToManyField(
-        ArticleTag, related_name='articles'
+        ArticleTag, related_name='articles', blank=True,
     )
     recursive = models.BooleanField()
 

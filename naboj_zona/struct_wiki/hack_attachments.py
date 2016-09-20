@@ -17,10 +17,7 @@ VIEW_CLASSES = [
     views.AttachmentView,
     views.AttachmentAddView,
     views.AttachmentReplaceView,
-    views.AttachmentHistoryView,
-    views.AttachmentDownloadView,
     views.AttachmentDeleteView,
-    views.AttachmentDownloadView,
     views.AttachmentChangeRevisionView,
 ]
 
