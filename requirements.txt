@@ -1,3 +1,4 @@
+defusedxml==0.4.1
 Django==1.9
 django-bootstrap3==7.0.1
 django-classy-tags==0.8.0
@@ -6,7 +7,13 @@ django-mptt==0.8.6
 django-nyt==0.9.9
 django-sekizai==0.10.0
 Markdown==2.6.6
+oauthlib==2.0.0
 Pillow==3.3.1
+PyJWT==1.4.2
+python-social-auth==0.2.21
+python3-openid==3.0.10
+requests==2.11.1
+requests-oauthlib==0.6.2
 six==1.10.0
 sorl-thumbnail==12.3
 wiki==0.1.2

@@ -19,6 +19,18 @@
           </li>
         {% endfor %}
       </ul>
+      <ul class="nav navbar-nav navbar-right">
+        {% if not user.is_anonymous %}
+          <li><p class="navbar-text">{{ user.get_full_name }}</p></li>
+          <li><a href="{% url 'logout' %}">
+            Log Out
+          </a></li>
+        {% else %}
+          <li><a href="{% url 'social:begin' backend='facebook' %}">
+            Log In with Facebook
+          </a></li>
+        {% endif %}
+      </ul>
     </div>
   </div>
 </nav>
