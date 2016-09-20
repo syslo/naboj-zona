@@ -14,7 +14,9 @@ def index(request):
 
     context['holders'] = ArticleHolder.objects.with_user_permission(
         user, CAN_READ_ARTICLE,
-    )
+    ).select_related(
+        'article', 'article__current_revision',
+    ).prefetch_related('tags')
 
     return render(request, 'struct_wiki/index.html', context)
 

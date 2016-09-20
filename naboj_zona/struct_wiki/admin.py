@@ -25,3 +25,4 @@ class DomainAdmin(admin.ModelAdmin):
 
 admin.site.register(models.Domain, DomainAdmin)
 admin.site.register(models.ArticleHolder)
+admin.site.register(models.ArticleTag)

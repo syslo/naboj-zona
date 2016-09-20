@@ -14,6 +14,7 @@
     <thead>
       <tr>
         <th>Name</th>
+        <th>Tags</th>
         <th>Domain</th>
         <th>Last Modified</th>
       </tr>
@@ -24,6 +25,11 @@
           onclick="location.href='{% url 'wiki:get' article_id=holder.article.pk %}'"
         >
           <td>{{ holder.article.current_revision.title }}</td>
+          <td>
+            {% for tag in holder.tags.all %}
+              <span class="label label-primary">{{ tag.name }}</span>
+            {% endfor %}
+          </td>
           <td>{{ holder.domain.name }}</td>
           <td>{{ holder.article.current_revision.modified }}</td>
         </tr>

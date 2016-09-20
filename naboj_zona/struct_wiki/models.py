@@ -97,6 +97,13 @@ class ArticleHolderQuerySet(models.QuerySet):
         return qs
 
 
+class ArticleTag(models.Model):
+    name = models.CharField(max_length=16, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
 class ArticleHolder(models.Model):
     article = models.OneToOneField(
         Article, on_delete=models.CASCADE,
@@ -104,6 +111,9 @@ class ArticleHolder(models.Model):
     )
     domain = models.ForeignKey(
         Domain, related_name='article_holders'
+    )
+    tags = models.ManyToManyField(
+        ArticleTag, related_name='articles'
     )
     recursive = models.BooleanField()
 
