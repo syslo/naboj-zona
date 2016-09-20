@@ -5,19 +5,30 @@ from django.views.generic.edit import FormView
 
 from .constants import CAN_READ_ARTICLE, CAN_EDIT_ARTICLE
 from .models import ArticleHolder
-from .forms import CreateArticleForm, ArticleSettingsForm
+from .forms import ArticleSearchForm, CreateArticleForm, ArticleSettingsForm
 
 
 def index(request):
-    user = request.user
-    context = {}
-
-    context['holders'] = ArticleHolder.objects.with_user_permission(
-        user, CAN_READ_ARTICLE,
+    holders = ArticleHolder.objects.with_user_permission(
+        request.user, CAN_READ_ARTICLE,
+    ).order_by(
+        '-article__current_revision__modified'
     ).select_related(
         'article', 'article__current_revision', 'domain',
     ).prefetch_related('tags')
 
+    if 'domain' in request.GET and request.GET['domain']:
+        holders = holders.filter(domain__in=request.GET['domain'])
+
+    if 'tag' in request.GET and request.GET['tag']:
+        holders = holders.filter(tags__in=request.GET['tag'])
+
+    form = ArticleSearchForm(user=request.user, data=request.GET)
+
+    context = {
+        'holders': holders,
+        'form': form,
+    }
     return render(request, 'struct_wiki/index.html', context)
 
 

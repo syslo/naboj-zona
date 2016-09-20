@@ -16,3 +16,19 @@
 .wiki-article-header h1 {
   margin-top: 0px;
 }
+
+.article-search-header {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.article-search-heading {
+  flex-grow: 1;
+}
+
+.article-search-buttons {
+  margin-left: 10px;
+  margin-right: 10px;
+}

@@ -2,8 +2,8 @@ from django import forms
 
 from wiki.models.article import Article, ArticleRevision
 
-from .constants import CAN_EDIT_ARTICLE
-from .models import ArticleHolder, Domain
+from .constants import CAN_READ_ARTICLE, CAN_EDIT_ARTICLE
+from .models import ArticleHolder, ArticleTag, Domain
 
 
 class ArticleHolderForm(forms.ModelForm):
@@ -43,3 +43,19 @@ class CreateArticleForm(ArticleHolderForm):
         self.instance.article.save()
 
         return super(CreateArticleForm, self).save(commit=True)
+
+
+class ArticleSearchForm(forms.Form):
+    domain = forms.ModelChoiceField(
+        required=False, queryset=None
+    )
+    tag = forms.ModelChoiceField(
+        required=False, queryset=ArticleTag.objects.all()
+    )
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        super(ArticleSearchForm, self).__init__(*args, **kwargs)
+        self.fields['domain'].queryset = Domain.objects.with_user_permission(
+            user, CAN_READ_ARTICLE
+        ).descendants()
