@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 from os import path
+from os import environ
 
 from naboj_zona.struct_wiki import permissions as wiki_permissions
 
@@ -52,6 +53,8 @@ INSTALLED_APPS = [
     'wiki',
     'wiki.plugins.attachments',
 
+    'social.apps.django_app.default',
+
     'bootstrap3',
 ]
 
@@ -81,6 +84,9 @@ TEMPLATES = [
 
                 'sekizai.context_processors.sekizai',
 
+                'social.apps.django_app.context_processors.backends',
+                'social.apps.django_app.context_processors.login_redirect',
+
                 'naboj_zona.core.context_processors.site',
                 'naboj_zona.core.context_processors.navigation',
             ],
@@ -101,6 +107,10 @@ DATABASES = {
     }
 }
 
+AUTHENTICATION_BACKENDS = (
+    'social.backends.facebook.FacebookOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -146,12 +156,32 @@ BOOTSTRAP3 = {
     'theme_url': 'https://bootswatch.com/united/bootstrap.min.css'
 }
 
+SITE_ID = 1
+
 # Django Wiki
 
-SITE_ID = 1
 WIKI_ACCOUNT_HANDLING = False
 WIKI_URL_CONFIG_CLASS = 'naboj_zona.struct_wiki.urls.StructWikiURLPatterns'
 WIKI_CAN_READ = wiki_permissions.can_read
 WIKI_CAN_WRITE = wiki_permissions.can_write
 WIKI_CAN_DELETE = wiki_permissions.can_delete
 WIKI_CAN_MODERATE = wiki_permissions.can_moderate
+
+# Social Auth
+
+SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
+
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+SOCIAL_AUTH_FACEBOOK_KEY = environ.get('SOCIAL_AUTH_FACEBOOK_KEY', '')
+SOCIAL_AUTH_FACEBOOK_SECRET = environ.get('SOCIAL_AUTH_FACEBOOK_SECRET', '')
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+    'fields': 'id,name,email',
+}
+
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
+SOCIAL_AUTH_LOGIN_ERROR_URL = '/'
+SOCIAL_AUTH_LOGIN_URL = '/'
+SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/'
+SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL = '/'
+SOCIAL_AUTH_DISCONNECT_REDIRECT_URL = '/'
+SOCIAL_AUTH_INACTIVE_USER_URL = '/'

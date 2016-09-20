@@ -16,6 +16,8 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
+from django.contrib.auth.views import logout
+
 from wiki.urls import get_pattern as get_wiki_pattern
 
 from naboj_zona.core import views
@@ -23,5 +25,7 @@ from naboj_zona.core import views
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^admin/', admin.site.urls),
-    url(r'^articles/', get_wiki_pattern())
+    url(r'^articles/', get_wiki_pattern()),
+    url(r'^logout/$', logout, {'next_page': '/'}, name='logout'),
+    url('', include('social.apps.django_app.urls', namespace='social')),
 ]
