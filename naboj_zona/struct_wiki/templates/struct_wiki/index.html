@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 
 {% block page_header %}
-<h1>Articles</h1>
+  <div class="btn-toolbar pull-right">
+    <a href="{% url 'wiki:create' %}" class="btn btn-primary">
+      Create
+    </a>
+  </div>
+  <h1>Articles</h1>
 {% endblock %}
 
 {% block page_content %}

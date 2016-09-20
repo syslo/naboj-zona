@@ -10,6 +10,8 @@ class StructWikiURLPatterns(WikiURLPatterns):
     from . import hack_resolve # noqa
     from . import hack_attachments # noqa
 
+    article_settings_view_class = views.ArticleSettings
+
     def get_urls(self):
         urlpatterns = []
         urlpatterns += self.get_root_urls()
@@ -21,6 +23,7 @@ class StructWikiURLPatterns(WikiURLPatterns):
     def get_root_urls(self):
         urlpatterns = [
             url('^$', views.index, name='index'),
+            url('^create/$', views.CreateArticle.as_view(), name='create'),
             url('^_revision/diff/(?P<revision_id>\d+)/$',
                 self.article_diff_view,
                 name='diff'),

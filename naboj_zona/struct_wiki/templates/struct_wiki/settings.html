@@ -1,0 +1,21 @@
+{% extends "wiki/article.html" %}
+
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block wiki_pagetitle %}
+  {% trans "Settings" %}: {{ article.current_revision.title }}
+{% endblock %}
+
+{% block wiki_contents_tab %}
+
+  {% if disabled %}
+    <p>You don't have permissions to edit settings</p>
+  {% else %}
+    <form action="" method="POST">
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      <input type="submit" class="btn btn-primary" value="Save" />
+    </form>
+  {% endif %}
+{% endblock %}

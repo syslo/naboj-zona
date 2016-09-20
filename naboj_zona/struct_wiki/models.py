@@ -100,7 +100,7 @@ class ArticleHolderQuerySet(models.QuerySet):
 class ArticleHolder(models.Model):
     article = models.OneToOneField(
         Article, on_delete=models.CASCADE,
-        primary_key=True, related_name='holder',
+        null=False, related_name='holder',
     )
     domain = models.ForeignKey(
         Domain, related_name='article_holders'
