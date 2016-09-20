@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseForbidden
+from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.views.generic.edit import FormView
 
@@ -8,6 +9,7 @@ from .models import ArticleHolder
 from .forms import ArticleSearchForm, CreateArticleForm, ArticleSettingsForm
 
 
+@login_required
 def index(request):
     holders = ArticleHolder.objects.with_user_permission(
         request.user, CAN_READ_ARTICLE,

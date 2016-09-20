@@ -26,6 +26,8 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^admin/', admin.site.urls),
     url(r'^articles/', get_wiki_pattern()),
+    url(r'^login/$', views.login, name='login'),
+    url(r'^login/done/$', views.login_done, name='login_done'),
     url(r'^logout/$', logout, {'next_page': '/'}, name='logout'),
     url('', include('social.apps.django_app.urls', namespace='social')),
 ]

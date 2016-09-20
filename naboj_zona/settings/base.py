@@ -15,6 +15,8 @@ from os import environ
 
 from naboj_zona.struct_wiki import permissions as wiki_permissions
 
+from django.core.urlresolvers import reverse_lazy
+
 
 # Build paths inside the project like this: path.join(BASE_DIR, ...)
 BASE_DIR = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
@@ -169,6 +171,8 @@ WIKI_CAN_MODERATE = wiki_permissions.can_moderate
 
 # Social Auth
 
+LOGIN_URL = reverse_lazy('login')
+
 SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
 
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
@@ -178,10 +182,10 @@ SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
     'fields': 'id,name,email',
 }
 
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
-SOCIAL_AUTH_LOGIN_ERROR_URL = '/'
-SOCIAL_AUTH_LOGIN_URL = '/'
-SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/'
-SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL = '/'
-SOCIAL_AUTH_DISCONNECT_REDIRECT_URL = '/'
-SOCIAL_AUTH_INACTIVE_USER_URL = '/'
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = reverse_lazy('login_done')
+SOCIAL_AUTH_LOGIN_ERROR_URL = reverse_lazy('index')
+SOCIAL_AUTH_LOGIN_URL = reverse_lazy('login')
+SOCIAL_AUTH_NEW_USER_REDIRECT_URL = reverse_lazy('login_done')
+SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL = reverse_lazy('login_done')
+SOCIAL_AUTH_DISCONNECT_REDIRECT_URL = reverse_lazy('index')
+SOCIAL_AUTH_INACTIVE_USER_URL = reverse_lazy('index')
