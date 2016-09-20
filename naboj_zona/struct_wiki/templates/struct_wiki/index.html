@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% load bootstrap3 %}
+
+{% block page_header %}
+  <div class="article-search-header">
+    <h1 class="article-search-heading">Articles</h1>
+    <div class="article-search-buttons">
+      <form class="form-inline" method="GET">
+        {% bootstrap_form form layout='inline' %}
+        <input type="submit" class="btn btn-primary" value="Filter" />
+      </form>
+    </div>
+    <div class="article-search-buttons btn-toolbar">
+      <a href="{% url 'wiki:create' %}" class="btn btn-primary">
+        Create
+      </a>
+    </div>
+  </div>
+{% endblock %}
+
+{% block page_content %}
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Tags</th>
+        <th>Domain</th>
+        <th>Last Modified</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for holder in holders %}
+        <tr
+          onclick="location.href='{% url 'wiki:get' article_id=holder.article.pk %}'"
+        >
+          <td>{{ holder.article.current_revision.title }}</td>
+          <td>
+            {% for tag in holder.tags.all %}
+              <span class="label label-primary">{{ tag.name }}</span>
+            {% endfor %}
+          </td>
+          <td>
+            {{ holder.domain.name }}
+            {% if holder.recursive %}
+              &nbsp;<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            {% endif %}
+          </td>
+          <td>{{ holder.article.current_revision.modified|date:"Y-m-d H:i" }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
+

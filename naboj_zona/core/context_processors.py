@@ -33,7 +33,7 @@ def navigation(request):
         if 'external' in nav:
             item['external'] = nav['external']
 
-        if resolve(request.path_info).url_name in nav.get('highlight', []):
+        if resolve(request.path_info).view_name in nav.get('highlight', []):
             item['active'] = True
 
         items.append(item)

@@ -1,0 +1,11 @@
+CAN_READ_ARTICLE = 'can_read_article'
+CAN_EDIT_ARTICLE = 'can_edit_article'
+CAN_EDIT_MEMBERS = 'can_edit_members'
+
+RECURSIVE_PERMISSIONS = [
+    CAN_READ_ARTICLE,
+]
+
+PUBLISHABLE_PERMISSIONS = [
+    CAN_READ_ARTICLE,
+]

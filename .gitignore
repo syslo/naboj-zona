@@ -3,6 +3,8 @@ __pycache__
 
 # Data
 /db.sqlite3
+/wiki
 
 # Config
 /.env
+/naboj_zona/settings/local.py
