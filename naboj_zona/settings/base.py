@@ -31,6 +31,8 @@ SECRET_KEY = 'k0pjve!x47#c1)4h9np!&7u3!ov@czzt%j0w+0055lp_pb%s$!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+SITE_ID = 1
+
 ALLOWED_HOSTS = []
 
 
@@ -157,8 +159,6 @@ STATIC_URL = '/static/'
 BOOTSTRAP3 = {
     'theme_url': 'https://bootswatch.com/united/bootstrap.min.css'
 }
-
-SITE_ID = 1
 
 # Django Wiki
 
