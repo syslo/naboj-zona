@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 
+{% load wiki_tags %}
+
 {% block page_header %}
-<h1>Welcome</h1>
+<h1>Náboj Junior Zóna</h1>
+{% endblock %}
+
+{% block page_content %}
+{% if article %}
+  {% wiki_render article %}
+{% endif %}
 {% endblock %}

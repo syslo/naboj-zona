@@ -1,9 +1,17 @@
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ObjectDoesNotExist
+from django.conf import settings
+
+from wiki.models.article import Article
 
 
 def index(request):
-    return render(request, 'core/index.html', {})
+    try:
+        article = Article.objects.get(pk=settings.HOME_ARTICLE_ID)
+    except ObjectDoesNotExist:
+        article = None
+    return render(request, 'core/index.html', {'article': article})
 
 
 def login(request):
