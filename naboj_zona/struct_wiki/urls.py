@@ -29,3 +29,18 @@ class StructWikiURLPatterns(WikiURLPatterns):
                 name='diff'),
         ]
         return urlpatterns
+
+
+def get_domain_pattern():
+    return ([
+        url(
+            r'^$',
+            views.domain_index,
+            name='domain_index',
+        ),
+        url(
+            r'^(?P<domain_id>\d+)/$',
+            views.domain_settings,
+            name='domain_settings',
+        ),
+    ], 'wiki_domain', 'wiki_domain')

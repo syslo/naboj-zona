@@ -65,6 +65,12 @@ class Domain(models.Model):
 
     objects = DomainQuerySet.as_manager()
 
+    @property
+    def path(self):
+        if not self.parent:
+            return self.name
+        return '%s / %s' % (self.parent.path, self.name)
+
     def __str__(self):
         return self.name
 

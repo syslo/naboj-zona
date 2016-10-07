@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, Http404
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.views.generic.edit import FormView
 
-from .constants import CAN_READ_ARTICLE, CAN_EDIT_ARTICLE
-from .models import ArticleHolder
+from .constants import CAN_READ_ARTICLE, CAN_EDIT_ARTICLE, CAN_EDIT_MEMBERS
+from .models import ArticleHolder, Domain
 from .forms import ArticleSearchForm, CreateArticleForm, ArticleSettingsForm
+from .forms import MembershipFormSet
 
 
 @login_required
@@ -81,3 +83,51 @@ class ArticleSettings(FormView):
     def form_valid(self, form):
         holder = form.save()
         return redirect(reverse('wiki:settings', kwargs={'article_id': holder.article.pk}))
+
+
+def domain_index(request):
+    domains = list(Domain.objects.with_user_permission(
+        request.user, CAN_EDIT_MEMBERS,
+    ).descendants().prefetch_ancestors())
+
+    if len(domains) == 1:
+        return redirect(reverse(
+            'wiki_domain:domain_settings',
+            kwargs={'domain_id': domains[0].pk},
+        ))
+
+    context = {
+        'domains': sorted(domains, key=lambda d: d.path),
+    }
+    return render(request, 'struct_wiki/domain_index.html', context)
+
+
+def domain_settings(request, domain_id):
+    try:
+        domain = Domain.objects.with_user_permission(
+            request.user, CAN_EDIT_MEMBERS,
+        ).descendants().get(pk=domain_id)
+    except ObjectDoesNotExist:
+        raise Http404()
+
+    if request.method == 'POST':
+        membership_formset = MembershipFormSet(
+            request.POST, prefix='memberships', instance=domain,
+        )
+        if membership_formset.is_valid():
+            membership_formset.save()
+            membership_formset = MembershipFormSet(
+                prefix='memberships', instance=domain,
+            )
+    else:
+        membership_formset = MembershipFormSet(
+            prefix='memberships', instance=domain,
+        )
+
+    return render(
+        request,
+        'struct_wiki/domain_settings.html', {
+            'memberships': membership_formset,
+            'domain': domain
+        }
+    )

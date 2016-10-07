@@ -1,9 +1,10 @@
 from django import forms
+from django.contrib.auth import get_user_model
 
 from wiki.models.article import Article, ArticleRevision
 
 from .constants import CAN_READ_ARTICLE, CAN_EDIT_ARTICLE
-from .models import ArticleHolder, ArticleTag, Domain
+from .models import ArticleHolder, ArticleTag, Domain, Membership
 
 
 class ArticleHolderForm(forms.ModelForm):
@@ -25,6 +26,7 @@ class ArticleSettingsForm(ArticleHolderForm):
 
 
 class CreateArticleForm(ArticleHolderForm):
+
     title = forms.CharField()
 
     def save(self, commit=True):
@@ -46,9 +48,11 @@ class CreateArticleForm(ArticleHolderForm):
 
 
 class ArticleSearchForm(forms.Form):
+
     domain = forms.ModelChoiceField(
         required=False, queryset=None
     )
+
     tag = forms.ModelChoiceField(
         required=False, queryset=ArticleTag.objects.all()
     )
@@ -59,3 +63,18 @@ class ArticleSearchForm(forms.Form):
         self.fields['domain'].queryset = Domain.objects.with_user_permission(
             user, CAN_READ_ARTICLE
         ).descendants()
+
+
+class MembershipUserChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return obj.get_full_name()
+
+
+class MembershipForm(forms.ModelForm):
+    user = MembershipUserChoiceField(queryset=get_user_model().objects.all())
+
+
+MembershipFormSet = forms.models.inlineformset_factory(
+    Domain, Membership, extra=0, fields=('type', 'user'),
+    form=MembershipForm,
+)
