@@ -17,6 +17,9 @@ def navigation(request):
     items = []
 
     for nav in navs:
+        if 'condition' in nav and not nav['condition'](request.user):
+            continue
+
         item = {
             'name': nav['name'],
             'url': '#',
