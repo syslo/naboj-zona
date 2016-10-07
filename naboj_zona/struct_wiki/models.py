@@ -78,6 +78,12 @@ class Domain(models.Model):
         return self.name
 
 
+class MembershipQuerySet(models.QuerySet):
+
+    def with_permission(self, permission):
+        return self.filter(type__in=types_for_permission(permission))
+
+
 class Membership(models.Model):
     domain = models.ForeignKey(
         Domain, related_name='memberships'
@@ -88,6 +94,8 @@ class Membership(models.Model):
     type = models.CharField(
         max_length=8, choices=MEMBERSHIP_CHOICES
     )
+
+    objects = MembershipQuerySet.as_manager()
 
     class Meta:
         unique_together = (("user", "domain"),)
