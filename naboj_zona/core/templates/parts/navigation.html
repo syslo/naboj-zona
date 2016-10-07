@@ -26,9 +26,20 @@
             Log Out
           </a></li>
         {% else %}
-          <li><a href="{% url 'social:begin' backend='facebook' %}">
-            Log In with Facebook
-          </a></li>
+          <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+              Log In
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="{% url 'social:begin' backend='facebook' %}">
+                Use Facebook
+              </a></li>
+              <li><a href="{% url 'social:begin' backend='google-oauth2' %}">
+                Use Google
+              </a></li>
+            </ul>
+          </li>
         {% endif %}
       </ul>
     </div>

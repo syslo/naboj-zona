@@ -13,4 +13,12 @@
     Log in with Facebook
   </a>
 </p>
+<p>
+  <a
+    href="{% url 'social:begin' backend='google-oauth2' %}?next={{ next }}"
+    class="btn btn-primary"
+  >
+    Log in with Google
+  </a>
+</p>
 {% endblock %}
