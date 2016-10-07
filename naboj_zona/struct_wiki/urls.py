@@ -43,4 +43,15 @@ def get_domain_pattern():
             views.domain_settings,
             name='domain_settings',
         ),
+        url(
+            r'^(?P<domain_id>\d+)/join/(?P<membership_type>[a-z]+)/(?P<secret>[a-zA-Z0-9]+)/$',
+            views.domain_join_link,
+            name='domain_join_link',
+        ),
+        url(
+            r'^(?P<domain_id>\d+)/reset_secret/$',
+            views.domain_reset_secret,
+            name='domain_reset_secret',
+        ),
+
     ], 'wiki_domain', 'wiki_domain')

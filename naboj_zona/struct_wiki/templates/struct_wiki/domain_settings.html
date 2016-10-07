@@ -8,9 +8,42 @@
 {% endblock %}
 
 {% block page_content %}
-
-  <p>
-    <h3>Members</h3>
+  <div>
+    <h2>Join Links</h2>
+    <p>
+      Those links can be used to join this domain.
+    </p>
+    <p>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Role</th>
+            <th>Link</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for title, link in links %}
+            <tr>
+              <td>{{ title }}</td>
+              <td><a href={{ link }}>{{ link }}</a>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </p>
+    <p>
+      <form
+        action={% url 'wiki_domain:domain_reset_secret' domain_id=domain.pk %}
+        method="GET"
+      >
+        <input name="really" type="checkbox" required>
+        I wan't to reset the links for this domain.
+        <input type="submit" value="Reset">
+      </form>
+    </p>
+  <div>
+  <div>
+    <h2>Members</h2>
     <form action="" method="POST">
       {% csrf_token %}
       {{ memberships.management_form }}
@@ -53,7 +86,7 @@
       <a href="#" id="{{ memberships | formset_add_button_id }}" class="btn btn-primary">Add</a>
       <input type="submit" class="btn btn-primary" value="Save" />
     </form>
-  </p>
+  </div>
 
 {% endblock %}
 

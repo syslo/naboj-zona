@@ -9,8 +9,6 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    replaces = [('struct_wiki', '0001_initial'), ('struct_wiki', '0002_auto_20160904_1121'), ('struct_wiki', '0003_auto_20160909_0911'), ('struct_wiki', '0004_auto_20160909_1642'), ('struct_wiki', '0005_auto_20160920_1047')]
-
     dependencies = [
         ('wiki', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),

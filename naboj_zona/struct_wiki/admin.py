@@ -12,6 +12,7 @@ class MembershipInline(admin.TabularInline):
 
 
 class DomainAdmin(admin.ModelAdmin):
+    exclude = ('secret',)
     inlines = [
         MembershipInline,
     ]

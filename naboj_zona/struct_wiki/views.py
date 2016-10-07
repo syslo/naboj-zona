@@ -6,9 +6,12 @@ from django.core.urlresolvers import reverse
 from django.views.generic.edit import FormView
 
 from .constants import CAN_READ_ARTICLE, CAN_EDIT_ARTICLE, CAN_EDIT_MEMBERS
-from .models import ArticleHolder, Domain
+from .models import ArticleHolder, Domain, Membership
 from .forms import ArticleSearchForm, CreateArticleForm, ArticleSettingsForm
 from .forms import MembershipFormSet
+from .config import MEMBERSHIP_CHOICES, MEMBERSHIP_TYPES
+from .helpers import generate_domain_secret, calculate_link_secret
+from .helpers import calculate_join_link
 
 
 @login_required
@@ -85,10 +88,21 @@ class ArticleSettings(FormView):
         return redirect(reverse('wiki:settings', kwargs={'article_id': holder.article.pk}))
 
 
-def domain_index(request):
-    domains = list(Domain.objects.with_user_permission(
+def _editable_domains(request):
+    return Domain.objects.with_user_permission(
         request.user, CAN_EDIT_MEMBERS,
-    ).descendants().prefetch_ancestors())
+    ).descendants()
+
+
+def _editable_domain(request, domain_id):
+    try:
+        return _editable_domains(request).get(pk=domain_id)
+    except ObjectDoesNotExist:
+        raise Http404()
+
+
+def domain_index(request):
+    domains = list(_editable_domains(request).prefetch_ancestors())
 
     if len(domains) == 1:
         return redirect(reverse(
@@ -103,12 +117,7 @@ def domain_index(request):
 
 
 def domain_settings(request, domain_id):
-    try:
-        domain = Domain.objects.with_user_permission(
-            request.user, CAN_EDIT_MEMBERS,
-        ).descendants().get(pk=domain_id)
-    except ObjectDoesNotExist:
-        raise Http404()
+    domain = _editable_domain(request, domain_id)
 
     if request.method == 'POST':
         membership_formset = MembershipFormSet(
@@ -124,10 +133,39 @@ def domain_settings(request, domain_id):
             prefix='memberships', instance=domain,
         )
 
-    return render(
-        request,
-        'struct_wiki/domain_settings.html', {
-            'memberships': membership_formset,
-            'domain': domain
-        }
+    context = {
+        'memberships': membership_formset,
+        'domain': domain,
+        'links': [
+            (title, calculate_join_link(request, domain, key))
+            for key, title in MEMBERSHIP_CHOICES
+        ],
+    }
+
+    return render(request, 'struct_wiki/domain_settings.html', context)
+
+
+def domain_reset_secret(request, domain_id):
+    domain = _editable_domain(request, domain_id)
+    domain.secret = generate_domain_secret()
+    domain.save()
+    return domain_settings(request, domain_id)
+
+
+def domain_join_link(request, domain_id, membership_type, secret):
+    domain = get_object_or_404(Domain, pk=domain_id)
+
+    if calculate_link_secret(domain, membership_type) != secret:
+        raise Http404()
+
+    membership, created = Membership.objects.get_or_create(
+        domain=domain, user=request.user, defaults={'type': membership_type},
     )
+
+    old_priority = MEMBERSHIP_TYPES[membership.type]['priority']
+    new_priority = MEMBERSHIP_TYPES[membership_type]['priority']
+    if new_priority > old_priority:
+        membership.type = membership_type
+        membership.save()
+
+    return redirect(reverse('index'))
