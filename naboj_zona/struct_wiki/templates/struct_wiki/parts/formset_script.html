@@ -1,0 +1,9 @@
+<script>
+  $('#id_{{ prefix }}-add_button').click(function() {
+    var id = $('#id_{{ prefix }}-TOTAL_FORMS').val()
+    $('#id_{{ prefix }}-body').append(
+      $('#id_{{ prefix }}-template').html().replace(/__prefix__/g, id)
+    )
+    $('#id_{{ prefix }}-TOTAL_FORMS').val(parseInt(id) + 1)
+  });
+</script>

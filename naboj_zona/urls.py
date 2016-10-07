@@ -19,12 +19,14 @@ from django.contrib import admin
 from django.contrib.auth.views import logout
 
 from wiki.urls import get_pattern as get_wiki_pattern
+from naboj_zona.struct_wiki.urls import get_domain_pattern
 
 from naboj_zona.core import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^admin/', admin.site.urls),
+    url(r'^domains/', get_domain_pattern()),
     url(r'^articles/', get_wiki_pattern()),
     url(r'^login/$', views.login, name='login'),
     url(r'^login/done/$', views.login_done, name='login_done'),

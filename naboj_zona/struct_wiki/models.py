@@ -5,7 +5,7 @@ from wiki.models.article import Article
 
 from .config import MAX_DOMAIN_DEPTH, MEMBERSHIP_CHOICES
 from .constants import RECURSIVE_PERMISSIONS, PUBLISHABLE_PERMISSIONS
-from .helpers import types_for_permission
+from .helpers import types_for_permission, generate_domain_secret
 
 
 class DomainQuerySet(models.QuerySet):
@@ -61,9 +61,18 @@ class Domain(models.Model):
     parent = models.ForeignKey(
         'self', null=True, blank=True, related_name='children'
     )
+    secret = models.CharField(
+        max_length=24, default=generate_domain_secret
+    )
     public = models.BooleanField()
 
     objects = DomainQuerySet.as_manager()
+
+    @property
+    def path(self):
+        if not self.parent:
+            return self.name
+        return '%s / %s' % (self.parent.path, self.name)
 
     def __str__(self):
         return self.name

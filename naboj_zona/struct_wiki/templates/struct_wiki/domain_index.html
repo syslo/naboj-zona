@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% load bootstrap3 %}
+
+{% block page_header %}
+  <h1 class="article-search-heading">Access Settings</h1>
+{% endblock %}
+
+{% block page_content %}
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Domain</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for domain in domains %}
+        <tr
+          onclick="location.href='{% url 'wiki_domain:domain_settings' domain_id=domain.pk %}'"
+        >
+          <td>{{ domain.path }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

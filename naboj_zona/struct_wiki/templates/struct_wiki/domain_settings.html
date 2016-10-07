@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% load bootstrap3 %}
+{% load formset_script %}
+
+{% block page_header %}
+  <h1>Access Settings of {{ domain.name }}</h1>
+{% endblock %}
+
+{% block page_content %}
+  <div>
+    <h2>Join Links</h2>
+    <p>
+      Those links can be used to join this domain.
+    </p>
+    <p>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Role</th>
+            <th>Link</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for title, link in links %}
+            <tr>
+              <td>{{ title }}</td>
+              <td><a href={{ link }}>{{ link }}</a>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </p>
+    <p>
+      <form
+        action={% url 'wiki_domain:domain_reset_secret' domain_id=domain.pk %}
+        method="GET"
+      >
+        <input name="really" type="checkbox" required>
+        I wan't to reset the links for this domain.
+        <input type="submit" value="Reset">
+      </form>
+    </p>
+  <div>
+  <div>
+    <h2>Members</h2>
+    <form action="" method="POST">
+      {% csrf_token %}
+      {{ memberships.management_form }}
+      <table class="table table-condensed">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Role</th>
+            <th>Delete?</th>
+          </tr>
+        </thead>
+        <tbody id="{{ memberships | formset_body_id }}">
+          {% for form in memberships %}
+            <tr {% if form.errors %}class="danger"{% endif %}>
+              <td>
+                {{ form.instance.user.get_full_name }}
+              </td>
+              <td>{{ form.type }}</td>
+              <td>{{ form.DELETE }}</td>
+              <td style="display:none">
+                {{ form.user }}
+                {{ form.id }}
+                {{ form.domain }}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+        <tbody id="{{ memberships | formset_template_id }}" style="display:none">
+          <tr>
+            <td>{{ memberships.empty_form.user }}</td>
+            <td>{{ memberships.empty_form.type }}</td>
+            <td>{{ memberships.empty_form.DELETE }}</td>
+            <td style="display:none">
+              {{ memberships.empty_form.id }}
+              {{ memberships.empty_form.domain }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <a href="#" id="{{ memberships | formset_add_button_id }}" class="btn btn-primary">Add</a>
+      <input type="submit" class="btn btn-primary" value="Save" />
+    </form>
+  </div>
+
+{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+  {% formset_script memberships %}
+{% endblock %}
