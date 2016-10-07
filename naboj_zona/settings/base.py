@@ -189,3 +189,7 @@ SOCIAL_AUTH_NEW_USER_REDIRECT_URL = reverse_lazy('login_done')
 SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL = reverse_lazy('login_done')
 SOCIAL_AUTH_DISCONNECT_REDIRECT_URL = reverse_lazy('index')
 SOCIAL_AUTH_INACTIVE_USER_URL = reverse_lazy('index')
+
+# Custom
+
+HOME_ARTICLE_ID = int(environ.get('NABOJ_ZONA_HOME_ARTICLE_ID', 0))
