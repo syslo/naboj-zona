@@ -101,6 +101,7 @@ def _editable_domain(request, domain_id):
         raise Http404()
 
 
+@login_required
 def domain_index(request):
     domains = list(_editable_domains(request).prefetch_ancestors())
 
@@ -116,6 +117,7 @@ def domain_index(request):
     return render(request, 'struct_wiki/domain_index.html', context)
 
 
+@login_required
 def domain_settings(request, domain_id):
     domain = _editable_domain(request, domain_id)
 
@@ -145,6 +147,7 @@ def domain_settings(request, domain_id):
     return render(request, 'struct_wiki/domain_settings.html', context)
 
 
+@login_required
 def domain_reset_secret(request, domain_id):
     domain = _editable_domain(request, domain_id)
     domain.secret = generate_domain_secret()
@@ -152,6 +155,7 @@ def domain_reset_secret(request, domain_id):
     return domain_settings(request, domain_id)
 
 
+@login_required
 def domain_join_link(request, domain_id, membership_type, secret):
     domain = get_object_or_404(Domain, pk=domain_id)
 
